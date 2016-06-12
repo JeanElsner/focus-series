@@ -1,0 +1,11 @@
+{
+"HUMIDITY.5m.STDDEV": "0.25 %",
+"HUMIDITY.5m.MED": "46.20 %",
+"HUMIDITY.5m.MAX": "46.90 %",
+"HUMIDITY.1h.MED": "47.00 %",
+"HUMIDITY.1h.MAX": "47.90 %",
+"HUMIDITY.5m.AVG": "46.31 %",
+"HUMIDITY.1h.AVG": "47.23 %",
+"HUMIDITY.1h.MIN": "46.10 %",
+"HUMIDITY.5m.MIN": "46.10 %"
+}
