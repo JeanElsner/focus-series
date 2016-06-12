@@ -2,12 +2,7 @@
 import focus_series as fs
 import numpy as np
 import os
-import math
-import matplotlib.mlab as mlab
-import matplotlib.pyplot as plt
 import time
-from scipy.stats import entropy
-from astropy.table import Table
 from astropy.io import ascii
 
 # Configuration
@@ -36,6 +31,7 @@ for k in tsi:
         break
 
 entr.sort(key=lambda x: -x[0])
+os.makedirs(dat_path, exist_ok=True)
 ascii.write(np.array(entr), dat_path + "tsi_mutual_info", names=['mutual_info', 'tsi1', 'tsi2'])
 
 print(i, "iterations")

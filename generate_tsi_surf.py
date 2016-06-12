@@ -3,7 +3,7 @@ import focus_series as fs
 import matplotlib.pyplot as plt
 import numpy as np
 import time
-import math
+import os
 import argparse
 from matplotlib import cm
 from scipy import interpolate
@@ -26,6 +26,7 @@ parser.add_argument(
     '-k', '--kind', 
     help='The kind of average to calculate (default: mean)',
     choices=['mean', 'std', 'var', 'med'],
+    default='mean'
 )
 args = parser.parse_args()
 kind = args.kind
@@ -119,6 +120,7 @@ for i in range(len(gridded['err'])):
             marker='_', linewidth=2.0, color='red')
 
 plt.tight_layout()
+os.makedirs(img_path, exist_ok=True)
 fig.savefig(img_path + VAL + "_" + kind + ".pdf", dpi='figure', bbox_inches='tight')
 
 print(time.time()-start)

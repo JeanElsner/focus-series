@@ -3,9 +3,7 @@ import focus_series as fs
 from astropy.io import ascii
 import numpy as np
 import os
-import math
 import time
-from scipy.stats import entropy
 
 # Configuration
 tsi_path = "./data/tsi_tab/"
@@ -39,6 +37,7 @@ for k in psf:
         break
 
 entr.sort(key=lambda x: -x[0])
+os.makedirs(dat_path, exist_ok=True)
 ascii.write(np.array(entr), dat_path + "psf_tsi_mutual_info", names=['entropy', 'key1', 'key2'])
 
 print(i, "iterations")

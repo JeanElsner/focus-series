@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import focus_series as fs
 import numpy as np
-import math
+import os
 import time
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -109,6 +109,7 @@ for h in headers:
                 marker='_', linewidth=2.0, color='red')
     
     plt.tight_layout()
+    os.makedirs(img_path, exist_ok=True)
     fig.savefig(img_path + h + "_" + kind + ".pdf", dpi='figure', bbox_inches='tight')
 
 print(time.time()-start)

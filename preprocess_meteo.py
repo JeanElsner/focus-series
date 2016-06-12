@@ -5,7 +5,7 @@ import pytz
 import time
 import numpy as np
 import json
-import os.path
+import os
 
 start = time.time()
 tsi_path = './data/tsi_tab/'
@@ -13,7 +13,7 @@ meteo_path_src = './data/meteo_logs/'
 meteo_path_dst = './data/meteo_preproc/'
 time_delta = 150
 tz_ger = pytz.timezone('Europe/Berlin')
-
+os.makedirs(meteo_path_dst, exist_ok=True)
 limit = 1000
 i = 0
 ff = fs.get_tsi_filenames(tsi_path)

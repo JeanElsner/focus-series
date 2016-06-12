@@ -17,7 +17,7 @@ headers = ["x", "y", "flux", "bg", "bg_rms",
            "mx", "my", "mxy", "a4", "a5", "a6"]
 
 start = time.time()
-
+os.makedirs(med_path, exist_ok=True)
 median = fs.populate_psf_grid(psf_path, grid_x, grid_y, max_x, max_y, headers)
 
 for x in range(grid_x):

@@ -50,6 +50,7 @@ for k in tsi:
         fig.set_dpi(300)
         fig.set_size_inches(6, 6)
         plt.tight_layout()
+        os.makedirs(img_path, exist_ok=True)
         fig.savefig(img_path + k + ".pdf", dpi='figure', bbox_inches='tight')
         i += 1
     if (_max is not None and i >= _max):

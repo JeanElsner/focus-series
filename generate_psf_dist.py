@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from astropy.io import ascii
 import matplotlib.pyplot as plt
+import os
 
 # Configuration
 med_path = "./data/psf_median/"
@@ -28,4 +29,5 @@ for h in headers:
     fig.set_dpi(300)
     fig.set_size_inches(20, 20)
     plt.tight_layout()
-    fig.savefig(img_path + h + ".pdf", dpi='figure', bbox_inches='tight')
+    os.makedirs(img_path, exist_ok=True)
+    fig.savefig(img_path + h + ".pdf", bbox_inches='tight')

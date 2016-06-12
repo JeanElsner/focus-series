@@ -4,10 +4,10 @@ import numpy as np
 import json
 import matplotlib.pyplot as plt
 import time
-import math
 import argparse
+import os
 from astropy.io import ascii
-from scipy import interpolate
+#from scipy import interpolate
 
 psf_path   = './data/psf_data/'
 meteo_path = './data/meteo_preproc/'
@@ -79,7 +79,7 @@ grid_x, grid_y = np.mgrid[0:2*3.14:100j, 0:20:100j]
     reduce_to_grid). A proposed solution would be to 
     interpolate a grid in polar coordinates before
     coordinate transformation.
-"""
+
 spline = interpolate.SmoothBivariateSpline(
     np.array(points[0]).flatten(), 
     np.array(points[1]).flatten(), 
@@ -95,7 +95,7 @@ spline2 = interpolate.SmoothBivariateSpline(
     kx=3, ky=3
 )
 grid_z2 = spline2.ev(grid_x, grid_y)
-
+"""
 
 fig = plt.figure()
 fig.set_size_inches(14, 14)
@@ -107,7 +107,7 @@ ax.set_theta_direction(-1)
 ax.set_title(args.parameter + ' contour', y=1.08)
 ax.set_xlabel('south')
 ax.text(1.1, 0.5, 'east', transform=ax.transAxes, verticalalignment='center')
-plt.contourf(grid_x, grid_y, grid_z, alpha=.85)
+#plt.contourf(grid_x, grid_y, grid_z, alpha=.85)
 cs = plt.contourf(points[0], points[1], abs(np.array(_a4)), alpha=.85)
 cbar = plt.colorbar(cs, shrink=.8, pad=.15)
 cbar.ax.set_ylabel(args.parameter)
@@ -130,7 +130,7 @@ ax.set_theta_direction(-1)
 ax.set_title('Temperature contour', y=1.08)
 ax.set_xlabel('south')
 ax.text(1.1, 0.5, 'east', transform=ax.transAxes, verticalalignment='center')
-plt.contourf(grid_x, grid_y, grid_z2, alpha=.85)
+#plt.contourf(grid_x, grid_y, grid_z2, alpha=.85)
 cs3 = plt.contourf(points2[0], points2[1], _temp, alpha=.85)
 cbar3 = plt.colorbar(cs3, shrink=.8, pad=.15)
 cbar3.ax.set_ylabel('Temperature')
@@ -147,5 +147,6 @@ cbar4 = plt.colorbar(cs4, shrink=.8, pad=.15)
 cbar4.ax.set_ylabel('Temperature')
 
 plt.tight_layout()
+os.makedirs(args.plot_path, exist_ok=True)
 plt.savefig(args.plot_path + 'wind_' + args.parameter + '.pdf')
 print(time.time()-start, 'seconds')

@@ -3,6 +3,7 @@ import focus_series as fs
 from astropy.io import ascii
 import numpy as np
 import time
+import os
 from scipy.stats import entropy
 
 # Configuration
@@ -36,6 +37,7 @@ for k in psf:
         break
 
 entr.sort(key=lambda x: -x[0])
+os.makedirs(dat_path, exist_ok=True)
 ascii.write(np.array(entr), dat_path + "psf_mutual_info", names=['mutual_info', 'psf1', 'psf2'])
 
 print(i, "iterations")
