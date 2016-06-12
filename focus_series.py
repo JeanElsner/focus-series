@@ -294,7 +294,24 @@ def check_if_const(dst, threshold=.9):
     return max(dst)/float(sum(dst)) > threshold
     
 def read_all_tsi(tsi_path, limit=None):
-    r"""Read all the tsi files in the directory."""
+    r"""Read all the tsi files in the directory.
+    
+    Reads all the tsi files and stores lists of their
+    values in a dictionary.
+    
+    Parameters
+    ----------
+    tsi_path : str
+        Path to directory to search for tsi files.
+    limit : int, optional
+        A limit to the number of files to load.
+    
+    Returns
+    -------
+    tsi : dict
+        A dictionary containing lists of all the tsi
+        values read.
+    """
     tsi = {}
     i = 0
     for f in get_tsi_filenames(tsi_path):
@@ -309,7 +326,30 @@ def read_all_tsi(tsi_path, limit=None):
     return tsi
     
 def read_all_psf_grids(med_path, headers, grid_x=3, grid_y=3):
-    r"""Read the the gridded psf files in the directory."""
+    r"""Read the the gridded psf files in the directory.
+    
+    Reads all the median values per grid as generated
+    by `populate_psf_grid`.
+    
+    Parameters
+    ----------
+    med_path : str
+        Path to the directory containing the median grids.
+    headers : array_like
+        A list of the psf headers to look for.
+    grid_x, grid_y : int, optional
+        Dimension of the grid.
+    
+    Returns
+    -------
+    psf : list
+        List object containing the median values and their
+        position within the grid.
+    
+    See Also
+    --------
+    populate_psf_grid : Calculates median values per grid
+    """
     psf = []
     for h in headers:
         for x in range(grid_x):
@@ -317,9 +357,33 @@ def read_all_psf_grids(med_path, headers, grid_x=3, grid_y=3):
                 f = ascii.read(med_path + "grid_" + str(x) + "_" + str(y) + "_" + h + ".psf")
                 psf.append([f[h], h, x, y])
     return psf
-    
+
 def read_all_psf_temp_elev(headers, psf_path, tsi_path, limit = None):
-    r"""Read all the psf values and relate them to elevation and temperature."""
+    r"""Read all the psf values and relate them to elevation and temperature.
+    
+    The averages for the psf values of each file as well as the
+    corresponding temperature and elevation are stored for each
+    header in a dictionary.
+    
+    Parameters
+    ----------
+    headers : array_like
+        List of the headers to read.
+    psf_path : str
+        Path to the directory containing the psf files.
+    tsi_path : str
+        Path to the directory containing the tsi meta-data files.
+    limit : int, optional
+        A limit to the number of files to load. Default is `None`
+        (no limit).
+    
+    Returns
+    -------
+    dict
+        Each header is used as a key to store a dictionary
+        object. These dictionaries contain lists, where each
+        row corresponds to a psf file.
+    """
     lst = generate_temp_elev_header_dict(headers)
     i = 0
     for f in get_psf_filenames(psf_path):
@@ -345,6 +409,22 @@ def read_all_psf_temp_elev(headers, psf_path, tsi_path, limit = None):
 def read_all_tsi_val_temp_elev(val, tsi_path, limit = None):
     r"""Read all the values for the given tsi header 
     in relation to temperature and elevation.
+    
+    Parameters
+    ----------
+    val : str
+        Name of the tsi field to read.
+    tsi_path : str
+        Path to the directory containing the tsi meta-data files.
+    limit : int, optional
+        Limit to the number of files to load. Default is `None`
+        (no limit).
+    
+    Returns
+    -------
+    dict
+        Dictionary object with three fields, each a list of
+        values (temperature, elevation and the tsi value).
     """
     lst = generate_temp_elev_val_dict()
     i = 0
@@ -359,8 +439,57 @@ def read_all_tsi_val_temp_elev(val, tsi_path, limit = None):
             break
     return lst
 
-def populate_psf_grid(psf_path, grid_x=3, grid_y=3, max_x=9000, max_y=9000, headers=None, _max=None):
-    r"""Populates a grid with median values of all the psf files."""
+def get_headers(filename):
+    """Get the headers of the given file.
+    
+    Reads the headers of the given file, using the default
+    astropy.io.ascii behavior.
+    
+    Parameters
+    ----------
+    filename : str
+        Filename to be read.
+    
+    Returns
+    -------
+    array_like
+        The names of the headers found in the file.
+    """
+    f = ascii.read(filename)
+    return f.colnames
+
+def populate_psf_grid(psf_path, grid_x=3, grid_y=3, max_x=9000, max_y=9000, 
+                      headers=None, limit=None):
+    r"""Populates a grid with median values of all the psf files.
+    
+    Reads all the psf files in the given directory and assigns
+    each psf parameter as specified by `headers` to a grid.
+    For each of these grids, a median value is calculated,
+    based on the psf values within the grid.
+    
+    Parameters
+    ----------
+    psf_path : str
+        Path to the directory containing the psf files.
+    grid_x, grid_y : int, optional
+        Number of grids. Default is a :math:`3\times 3` grid.
+    max_x, max_y : int
+        The maximum `x` and `y` pixel coordinates of the psf.
+        Default is 9000.
+    headers : array_like, optional
+        A list of the psf parameters to read. If set to `None`,
+        all the parameters will be read.
+    limit : int, optional
+        Maximum number of psf files to read. Default is `None`.
+        If set to `None` all the files in the directory will be
+        read.
+    
+    Returns
+    -------
+    list
+        A two dimensional list containing median values
+        for each grid and header.
+    """
     files = get_psf_filenames(psf_path)
     if headers is None:
         headers = get_headers(psf_path + files[0])
@@ -383,7 +512,7 @@ def populate_psf_grid(psf_path, grid_x=3, grid_y=3, max_x=9000, max_y=9000, head
                         _med = np.median(psf[x][y][c])
                         if is_number(_med) and not math.isinf(_med):
                             med[x][y][c].append(_med)
-        if (_max is not None and i >= _max):
+        if (limit is not None and i >= limit):
             break
     return med
 
@@ -398,7 +527,29 @@ def _get_temp_elev_bound(ext, grid_temp, grid_elev, temp, elev):
             ext[3] + (ext[2] - ext[3]) / grid_elev * (elev + 1))
 
 def populate_temp_elev_dict(dic, grid_temp, grid_elev, single_value=True):
-    r"""Populate a grid with average values from the dictionary."""
+    r"""Populate a grid with average values from the dictionary.
+
+    Takes values with temperature and elevation information
+    and assigns them to a grid position. For each grid averages
+    of the values within the grid are calculated.
+    
+    Parameters
+    ----------
+    dic : dict
+        Dictionary containing lists of the values and their
+        temperature and elevation.
+    grid_temp, grid_elev : int
+        Dimension of the grid.
+    single_value : bool
+        Used to determine, whether there is a single value, as
+        is the case with tsi data or an average of data, as is
+        the case for psf data. Default is `True`.
+    
+    Returns
+    -------
+    dict
+        A dictionary of lists as defined by `generate_temp_elev_dict`.
+    """
     ext = _get_temp_elev_dict_ext(dic)
     g = generate_temp_elev_dict()
     for __temp in range(grid_temp):
