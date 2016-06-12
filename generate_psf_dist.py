@@ -2,6 +2,7 @@
 from astropy.io import ascii
 import matplotlib.pyplot as plt
 import os
+import argparse
 
 # Configuration
 med_path = "./data/psf_median/"
@@ -10,6 +11,37 @@ grid_x = 3
 grid_y = 3
 headers = ["x", "y", "flux", "bg", "bg_rms", 
            "mx", "my", "mxy", "a4", "a5", "a6"]
+
+parser = argparse.ArgumentParser(
+    description='Generate histogram plots of the psf parameters-'
+)
+parser.add_argument(
+    '--grid-x', 
+    help='Grid dimension along the x axis', 
+    default=3,
+    type=int
+)
+parser.add_argument(
+    '--grid-y', 
+    help='Grid dimension along the y axis', 
+    default=3,
+    type=int
+)
+parser.add_argument(
+    '--med-path', 
+    help='Path to the preprocessed psf data on a grid', 
+    default=med_path
+)
+parser.add_argument(
+    '--plot-path',
+    help='Path to directory where the plots will be saved',
+    default=img_path
+)
+args = parser.parse_args()
+med_path = args.med_path
+img_path = args.plot_path
+grid_x   = args.grid_x
+grid_y   = args.grid_y
 
 for h in headers:
     fig = plt.figure()
