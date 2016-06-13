@@ -633,3 +633,31 @@ def search_meteo(dt_obj, meteo_path, time_delta = 5):
     except FileNotFoundError:
         print('No meteological data for', dt_obj)
     return dict(zip(keys, values))
+
+def get_sparse_tsi(params, n = 2):
+    """ Returns a list of shortened tsi parameters.
+    
+    Takes a list of tsi parameters and shortens
+    their name.
+    
+    Parameters
+    ----------
+    params : array_like
+        List of tsi parameters.
+    n : int, optional
+        The number of words to include in the shortened
+        name.
+    
+    Returns
+    -------
+    list
+        List of the same parameters with shortened names.
+    """
+    sparse = []
+    for p in params:
+        spl = p.split('.')
+        pp = ''
+        for i in range(1, min(len(spl), n)+1):
+            pp = spl[-i] + ('.' if i > 1 else '') + pp
+        sparse.append(pp)
+    return sparse
