@@ -29,12 +29,12 @@ parser.add_argument(
     default=psf_path
 )
 parser.add_argument(
-    '--meteo_path', 
+    '--meteo-path', 
     help='Path to the preprocessed meteological data files', 
     default=meteo_path
 )
 parser.add_argument(
-    '--plot_path',
+    '--plot-path',
     help='Path to directory where the plots will be saved',
     default=plot_path
 )
