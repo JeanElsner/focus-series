@@ -4,7 +4,6 @@ from astropy.io import ascii
 import numpy as np
 import time
 import os
-from scipy.stats import entropy
 
 # Configuration
 med_path = "./data/psf_median/"
@@ -27,10 +26,9 @@ for k in psf:
             dist2 = np.histogram(k2[0], 50, range=(min(k2[0]), max(k2[0])))
             if not fs.check_if_const(dist2[0]):
                 mi = fs.mutual_info(dist[0], dist2[0])
-                if k[1] != k2[1]:
-                    i += 1
-                    entr.append([mi, k[1] + "(" + str(k[2]) + ":" + str(k[3]) + ")", 
-                                 k2[1] + "(" + str(k2[2]) + ":" + str(k2[3]) + ")"])
+                i += 1
+                entr.append([mi, k[1] + "(" + str(k[2]) + ":" + str(k[3]) + ")", 
+                             k2[1] + "(" + str(k2[2]) + ":" + str(k2[3]) + ")"])
 
     if (_max is not None and i >= _max):
         print("maximum reached")

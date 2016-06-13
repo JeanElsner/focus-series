@@ -1,9 +1,13 @@
 import os
 import numpy as np
 import math
+import pandas
 import datetime as dt
+import matplotlib.pyplot as plt
 from astropy.io import ascii
 from sklearn.metrics import mutual_info_score
+import seaborn as sns
+sns.set(context='paper', font='monospace')
 
 __project__  = 'focus-series'
 __author__   = 'Jean Elsner'
@@ -661,3 +665,44 @@ def get_sparse_tsi(params, n = 2):
             pp = spl[-i] + ('.' if i > 1 else '') + pp
         sparse.append(pp)
     return sparse
+
+def mutual_info_heatmap(file_src, plot_path, f_num, size=None,  
+                        key1='key1', key2='key1', keymi='mutual_info', 
+                        xlabel_callback=lambda l: l,
+                        ylabel_callback=lambda l: l):
+    mi = ascii.read(file_src)
+    #fields = sorted(set(list(mi[key1]) + list(mi[key2])))
+    fields = sorted(set(mi[key1]))
+    fields2 = sorted(set(mi[key2]))
+    f_len  = len(fields)
+    f_len2 = len(fields2)
+    print(len(set(fields+fields2)), 'parameters total')
+    for i in range(math.ceil(f_len/f_num)):
+        start = i*f_num
+        end   = min((i+1)*f_num,f_len)
+        sub_fields = fields[start:end]
+    
+        for j in range(math.ceil(f_len2/f_num)):
+            start2 = j*f_num
+            end2   = min((j+1)*f_num,f_len2)
+            sub_fields2 = fields2[start2:end2]
+            mat = {k : {k : 0 for k in sub_fields2} for k in sub_fields}   
+            for r in mi:
+                if r[key1] in sub_fields and r[key2] in sub_fields2:
+                    mat[r[key1]][r[key2]] = float(r[keymi])
+        
+            plt.ioff()
+            f, ax = plt.subplots(figsize=size)
+            df = pandas.DataFrame(mat)
+            sns.heatmap(
+                df, square=False,vmin=0,vmax=1,
+                xticklabels=xlabel_callback(df.axes[1]),
+                yticklabels=ylabel_callback(df.axes[0])
+            )
+            plt.yticks(rotation='horizontal')
+            plt.xticks(rotation='vertical')
+            f.tight_layout()
+            f.savefig(
+                plot_path + 'heatmap_' + str(i) + '-' + str(j) + '.pdf'
+            )
+            plt.close()

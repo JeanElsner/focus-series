@@ -9,23 +9,23 @@ sns.set(context='paper', font='monospace')
 plt.ioff()
 
 parser = argparse.ArgumentParser(
-    description='Generate tsi heatmap of mutual information.'
+    description='Generate psf/tsi heatmap of mutual information.'
 )
 parser.add_argument(
     '-f', '--file',
     help='File containing the mutual information',
-    default='./data/tsi_mutual_info'
+    default='./data/psf_tsi_mutual_info'
 )
 parser.add_argument(
     '-n', '--fields-per-plot',
-    help='The number of tsi fields in each plot',
+    help='The number of psf/tsi fields in each plot',
     default=20,
     type=int
 )
 parser.add_argument(
     '--plot-path',
     help='Path to the directory where the heatmap plots will be saved',
-    default='./plots/tsi_heatmaps/'
+    default='./plots/psf_tsi_heatmaps/'
 )
 parser.add_argument(
     '-s,', '--size',
@@ -42,6 +42,6 @@ else:
     size = None
 
 fs.mutual_info_heatmap(args.file, args.plot_path, args.fields_per_plot, size,
-                    key1='tsi1', key2='tsi2',
-                    xlabel_callback=fs.get_sparse_tsi,
+                    key1='key1', key2='key2', keymi='entropy',
+                    #xlabel_callback=fs.get_sparse_tsi,
                     ylabel_callback=fs.get_sparse_tsi)
