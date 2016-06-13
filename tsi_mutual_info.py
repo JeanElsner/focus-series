@@ -23,7 +23,8 @@ for k in tsi:
             dist2 = np.histogram(tsi[k2], 50)
             if not fs.check_if_const(dist2[0]):
                 mi = fs.mutual_info(dist[0], dist2[0])
-                if k != k2:
+                if True:
+                #if k != k2:
                     i += 1
                     entr.append([mi, k, k2])
     if (_max is not None and i >= _max):
