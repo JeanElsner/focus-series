@@ -33,7 +33,7 @@ for k in tsi:
 
 entr.sort(key=lambda x: -x[0])
 os.makedirs(dat_path, exist_ok=True)
-ascii.write(np.array(entr), dat_path + "tsi_mutual_info", names=['mutual_info', 'tsi1', 'tsi2'])
+ascii.write(np.array(entr), dat_path + "tsi_mutual_info", names=['mutual_info', 'key1', 'key2'])
 
 print(i, "iterations")
 print(time.time()-start)

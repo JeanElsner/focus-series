@@ -36,7 +36,7 @@ for k in psf:
 
 entr.sort(key=lambda x: -x[0])
 os.makedirs(dat_path, exist_ok=True)
-ascii.write(np.array(entr), dat_path + "psf_mutual_info", names=['mutual_info', 'psf1', 'psf2'])
+ascii.write(np.array(entr), dat_path + "psf_mutual_info", names=['mutual_info', 'key1', 'key2'])
 
 print(i, "iterations")
 print(time.time()-start)
