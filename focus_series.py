@@ -667,11 +667,40 @@ def get_sparse_tsi(params, n = 2):
     return sparse
 
 def mutual_info_heatmap(file_src, plot_path, f_num, size=None,  
-                        key1='key1', key2='key1', keymi='mutual_info', 
+                        key1='key1', key2='key2', keymi='mutual_info', 
                         xlabel_callback=lambda l: l,
                         ylabel_callback=lambda l: l):
+    """ Plots a heatmap of the mutual information.
+    
+    Creates a correlation matrix from the mutual information
+    in a file and plots a heatmap. Will also automatically
+    divide the matrix plot into a grid and save each grid
+    separately.
+    
+    Parameters
+    ----------
+    file_src : str
+        Filename to read.
+    plot_path : str
+        Path to directory where the plots will be saved.
+    f_num : int
+        The maximum number of parameters that will be
+        displayed on the axes. The plot will be divided
+        into a grid accordingly.
+    size : float, optional
+        Size of the plot in inches. If `None`, will be
+        set automatically.
+    key1, key2 : str, optional
+        Name of the columns in the file containing the
+        parameter names which where compared.
+    keymi : str, optional
+        Column name containing the mutual information value.
+    xlabel_callback, ylabel_callback : callable, optional
+        These callback functions will be called with the list
+        of parameters. The return value will be used for the
+        axis labels.
+    """
     mi = ascii.read(file_src)
-    #fields = sorted(set(list(mi[key1]) + list(mi[key2])))
     fields = sorted(set(mi[key1]))
     fields2 = sorted(set(mi[key2]))
     f_len  = len(fields)
